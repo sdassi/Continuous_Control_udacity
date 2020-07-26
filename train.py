@@ -27,6 +27,7 @@ def ddpg(n_episodes, max_t, print_every, threshold, brain_name):
             env_info = env.step(actions)[brain_name]  
             next_states = env_info.vector_observations
             rewards = env_info.rewards
+            rewards = [0.1 if rew > 0 else 0 for rew in rewards]
             dones = env_info.local_done
             for i_agent in range(num_agents):
                 agent.step(states[i_agent], actions[i_agent], rewards[i_agent], next_states[i_agent], dones[i_agent])
