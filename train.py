@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 from ddpg_agent import Agent
 
+UPDATE_NUM = 10
+
 def ddpg(n_episodes, max_t, print_every, threshold, brain_name):
     scores_deque = deque(maxlen=print_every)
     scores = []
@@ -28,12 +30,11 @@ def ddpg(n_episodes, max_t, print_every, threshold, brain_name):
             dones = env_info.local_done
             for i_agent in range(num_agents):
                 agent.step(states[i_agent], actions[i_agent], rewards[i_agent], next_states[i_agent], dones[i_agent])
-            for _ in range(10):
+            for _ in range(UPDATE_NUM):
                 agent.step_update(t)
             states = next_states
             score_agents += rewards
             if np.any(dones):
-                #print("finish with done ", t)
                 break 
         scores_deque.append(np.mean(score_agents))
         scores.append(np.mean(score_agents))
@@ -68,13 +69,10 @@ if __name__ == "__main__":
     state_size=33
     action_size=4
     agent = Agent(state_size, action_size, 0)
-    print("agent instantiated !!!!!!!!!!!!!!")
 
     #Train the agent with ddpg
     threshold = 30.0 #The agent must get an average score > threshold to solve the env 
     scores = ddpg(args.n_episodes, args.max_t, args.print_every, threshold, brain_name)
-
-    print(scores)
 
     #Plot scores
     fig = plt.figure()
