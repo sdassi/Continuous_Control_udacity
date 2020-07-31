@@ -11,6 +11,7 @@ For this project, we will provide you with two separate versions of the Unity en
 - The second version contains 20 identical agents, each with its own copy of the environment.
 
 I've chosen to work with the second version of the environment : **20 agents**
+![Reacher environment](https://user-images.githubusercontent.com/10624937/43851024-320ba930-9aff-11e8-8493-ee547c6af349.gif)
 
 ### State and action spaces
 The observation space consists of 33 variables corresponding to position, rotation, velocity, and angular velocities of the arm. Each action is a vector with four numbers, corresponding to torque applicable to two joints. Every entry in the action vector should be a number between -1 and 1.
