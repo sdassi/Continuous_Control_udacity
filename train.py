@@ -9,14 +9,15 @@ import matplotlib.pyplot as plt
 from ddpg_agent import Agent
 
 UPDATE_NUM = 10
+LEN_DEQUE = 100
 
-def ddpg(n_episodes, max_t, print_every, threshold, brain_name):
-    scores_deque = deque(maxlen=print_every)
+def ddpg(n_episodes, max_t, max_len_deque, print_every, threshold, brain_name):
+    scores_deque = deque(maxlen=max_len_deque)
     scores = []
     env_info = env.reset(train_mode=True)[brain_name]
     for i_episode in range(1, n_episodes+1):
         num_agents = len(env_info.agents) #number of agents
-        states = env_info.vector_observations #[0]
+        states = env_info.vector_observations 
         agent.reset()
         score_agents = np.zeros(num_agents)
         for t in range(max_t):
@@ -39,12 +40,12 @@ def ddpg(n_episodes, max_t, print_every, threshold, brain_name):
                 break 
         scores_deque.append(np.mean(score_agents))
         scores.append(np.mean(score_agents))
-        if len(scores_deque) == print_every and np.mean(scores_deque) >= threshold:
-            print("environment was solved at episode %d" %(i_episode-print_every))
+        if len(scores_deque) == max_len_deque and np.mean(scores_deque) >= threshold:
+            print("environment was solved at episode %d" %(i_episode-max_len_deque))
             torch.save(agent.actor_local.state_dict(), 'checkpoint_actor.pth')
             torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
             return scores
-        if i_episode % 10 == 0: #print_every
+        if i_episode % print_every == 0: 
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_deque)))
             
     return scores
@@ -73,7 +74,7 @@ if __name__ == "__main__":
 
     #Train the agent with ddpg
     threshold = 30.0 #The agent must get an average score > threshold to solve the env 
-    scores = ddpg(args.n_episodes, args.max_t, args.print_every, threshold, brain_name)
+    scores = ddpg(args.n_episodes, args.max_t, LEN_DEQUE, args.print_every, threshold, brain_name)
 
     #Plot scores
     fig = plt.figure()
